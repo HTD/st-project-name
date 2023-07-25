@@ -1,0 +1,25 @@
+{
+  "profiles": {
+    "WSL": {
+      "commandName": "WSL2",
+      "distributionName": ""
+    },
+    "test-info": {
+      "commandName": "Project",
+      "workingDirectory": "D:\\Source\\Embedded\\Templates\\STM32H745I-DISCO"
+    },
+    "test-invalid-name": {
+      "commandName": "Project",
+      "commandLineArgs": "1",
+      "workingDirectory": "D:\\Source\\Embedded\\Templates\\STM32H745I-DISCO"
+    },
+    "test-valid-rename": {
+      "commandName": "Project",
+      "commandLineArgs": "STM32H745_TEMPLATE",
+      "workingDirectory": "D:\\Source\\Embedded\\Templates\\STM32H745I-DISCO"
+    },
+    "test-invalid-directory": {
+      "commandName": "Project"
+    }
+  }
+}
