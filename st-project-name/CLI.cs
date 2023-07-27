@@ -188,7 +188,7 @@ internal static class CLI {
             return E_INVALID_NAME;
         }
         if (Project.Changes.Count < 1) {
-            Console.WriteLine("No changes made. Weird.");
+            Console.WriteLine("No changes made. Seems like already renamed.");
         }
         else {
             Console.WriteLine("Changes made:");
