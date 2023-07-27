@@ -98,6 +98,7 @@ internal static class CLI {
         var cursor = new Cursor();
         try {
             var gitVersion = new ShellCommand("git -v").Exec();
+            Console.WriteLine(gitVersion);
             var isRepo = Directory.Exists(".git");
             if (isRepo) Console.WriteLine("Git repository found.");
             else {
@@ -142,8 +143,6 @@ internal static class CLI {
             cursor = ConsoleEx.Start("Committing changes...");
             new ShellCommand($"git commit -m \"{message}\"").ExecAndForget();
             ConsoleEx.Complete(cursor, true);
-            Console.WriteLine(gitVersion);
-            Console.WriteLine(gitStatus);
         }
         catch {
             ConsoleEx.Error("Git not found.");
