@@ -127,6 +127,7 @@ internal partial class ProjectConfiguration {
                 Project.LinkLocationUri = newIocPathString;
                 Changes.Add("Project link locationURI");
             }
+            Project.Update();
         }
         var newTouchGFXFileName = newName + ".touchgfx";
         newIocPath = TouchGFXIocPath.Copy().RenameTarget(newName);
