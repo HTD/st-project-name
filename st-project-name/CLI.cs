@@ -50,6 +50,41 @@ internal static class CLI {
     private static void Help() => Console.WriteLine(CommandLine.Help);
 
     /// <summary>
+    /// Loads the project data.
+    /// </summary>
+    /// <returns>Exit code.</returns>
+    private static int Load() {
+        if (LoadResult != null) return LoadResult.Value;
+        var commandLine = CommandLine.Default;
+        switch (commandLine.Parameters.Count) {
+            case 0:
+                break;
+            case 1:
+                if (FS.IsPath(commandLine.Parameters[0])) ProjectRoot = commandLine.Parameters[0];
+                else NewName = commandLine.Parameters[0];
+                break;
+            case 2:
+                ProjectRoot = commandLine.Parameters[0];
+                NewName = commandLine.Parameters[1];
+                break;
+        }
+        if (!Directory.Exists(ProjectRoot)) {
+            ConsoleEx.Error("The specified project root directory doesn't exist!");
+            return E_NO_ROOT_DIR;
+        }
+        Project = new ProjectConfiguration(ProjectRoot);
+        if (!Project.Project.Exists) {
+            ConsoleEx.Error("The main project file not found.");
+            return E_NO_PROJECT_FILE;
+        }
+        if (!Project.Ioc.Exists) {
+            ConsoleEx.Error("The project .ioc file not found.");
+            return E_NO_IOC_FILE;
+        }
+        return E_OK;
+    }
+
+    /// <summary>
     /// Tries to commit the current changes to Git repo if applicable.
     /// </summary>
     /// <param name="message">Optional commit message.</param>
@@ -116,41 +151,6 @@ internal static class CLI {
         finally {
             Directory.SetCurrentDirectory(cwd);
         }
-    }
-
-    /// <summary>
-    /// Loads the project data.
-    /// </summary>
-    /// <returns>Exit code.</returns>
-    private static int Load() {
-        if (LoadResult != null) return LoadResult.Value;
-        var commandLine = CommandLine.Default;
-        switch (commandLine.Parameters.Count) {
-            case 0:
-                break;
-            case 1:
-                if (FS.IsPath(commandLine.Parameters[0])) ProjectRoot = commandLine.Parameters[0];
-                else NewName = commandLine.Parameters[0];
-                break;
-            case 2:
-                ProjectRoot = commandLine.Parameters[0];
-                NewName = commandLine.Parameters[1];
-                break;
-        }
-        if (!Directory.Exists(ProjectRoot)) {
-            ConsoleEx.Error("The specified project root directory doesn't exist!");
-            return E_NO_ROOT_DIR;
-        }
-        Project = new ProjectConfiguration(ProjectRoot);
-        if (!Project.Project.Exists) {
-            ConsoleEx.Error("The main project file not found.");
-            return E_NO_PROJECT_FILE;
-        }
-        if (!Project.Ioc.Exists) {
-            ConsoleEx.Error("The project .ioc file not found.");
-            return E_NO_IOC_FILE;
-        }
-        return E_OK;
     }
 
     /// <summary>
