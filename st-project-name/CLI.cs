@@ -180,7 +180,13 @@ internal static class CLI {
         if (!Project.Ioc.Exists) return E_NO_IOC_FILE;
         if (NewName is null) return E_INVALID_NAME;
         Console.WriteLine("Renaming project...");
-        Project.Rename(NewName);
+        try {
+            Project.Rename(NewName);
+        }
+        catch (ArgumentException)  {
+            ConsoleEx.Error("Invalid project name!");
+            return E_INVALID_NAME;
+        }
         if (Project.Changes.Count < 1) {
             Console.WriteLine("No changes made. Weird.");
         }
