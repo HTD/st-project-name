@@ -31,6 +31,7 @@ internal static class CLI {
         commandLine.Map<Options>();
         commandLine.Delegates.Add(Options.Help, Help);
         commandLine.Delegates.Add(Options.Commit, Commit);
+        commandLine.Delegates.Add(Options.CommitWMessage, CommitWMessage);
         commandLine.Parse(args);
         var errors = CommandLine.ValidationErrors;
         if (errors != null) return SyntaxError(errors);
@@ -85,16 +86,24 @@ internal static class CLI {
     }
 
     /// <summary>
+    /// Handles commit option, without -m it should commit with default message.
+    /// </summary>
+    static void Commit() {
+        if (CommandLine.Default.HasOption(Options.CommitWMessage)) return;
+        CommitWMessage("st-project-rename run.");
+    }
+
+    /// <summary>
     /// Tries to commit the current changes to Git repo if applicable.
     /// </summary>
     /// <param name="message">Optional commit message.</param>
     /// <returns>Exit code.</returns>
-    static void Commit(string? message) {
+    static void CommitWMessage(string message) {
+        if (message.Length < 1) return;
         LoadResult = Load();
         if (LoadResult != E_OK) return;
         var cwd = Directory.GetCurrentDirectory();
         Directory.SetCurrentDirectory(ProjectRoot);
-        if (message is null) message = "st-project-name run.";
         var cursor = new Cursor();
         try {
             var gitVersion = new ShellCommand("git -v").Exec();
@@ -211,14 +220,17 @@ internal static class CLI {
     /// <summary>
     /// Command line options.
     /// </summary>
-    [Usage("{command} <--help|--commit> <project_root_path> <new_project_name>")]
+    [Usage("{command} <--help |--commit |-m> <project_root_path> <new_project_name>")]
     enum Options {
 
         [Option("?|h|help", null, "Displays this help message.")]
         Help,
 
-        [Option("c|commit", "message", "Commits current changes to Git repo, initializes a new repo if not present and Git available.")]
-        Commit
+        [Option("c|commit", null, "Commits current changes to Git repo, initializes a new repo if not present and Git available.")]
+        Commit,
+
+        [Option("m", "message", "Provides a custom message to the commit option (implies -c).")]
+        CommitWMessage
 
     }
 
