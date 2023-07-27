@@ -2,13 +2,14 @@
 
 namespace st_project_name;
 
+/// <summary>
+/// Contains main STM32CubeIDE project configuration.
+/// </summary>
 internal class CubeIDEProject : XmlConfigFile {
 
-    private const string NameKey = "name";
-    private const string LinkedResourcesKey = "linkedResources";
-    private const string LinkKey = "link";
-    private const string LocationUriKey = "locationURI";
-
+    /// <summary>
+    /// Gets or sets the project name.
+    /// </summary>
     public string Name {
         get => NameElement?.Value ?? string.Empty;
         set {
@@ -19,6 +20,9 @@ internal class CubeIDEProject : XmlConfigFile {
         }
     }
 
+    /// <summary>
+    /// Gets or sets the project link name.
+    /// </summary>
     public string LinkName {
         get => IocLinkNameElement?.Value ?? string.Empty;
         set {
@@ -29,6 +33,9 @@ internal class CubeIDEProject : XmlConfigFile {
         }
     }
 
+    /// <summary>
+    /// Gets or sets the project link location URI.
+    /// </summary>
     public string LinkLocationUri {
         get => IocLinkLocationUriElement?.Value ?? string.Empty;
         set {
@@ -39,6 +46,10 @@ internal class CubeIDEProject : XmlConfigFile {
         }
     }
 
+    /// <summary>
+    /// Creates a STM32CubeIDE project metadata from a local file.
+    /// </summary>
+    /// <param name="path">Source path.</param>
     public CubeIDEProject(string path) : base(path) {
         NameElement = Root?.Element(NameKey);
         IocLinkElement = Root?.Element(LinkedResourcesKey)?
@@ -46,6 +57,11 @@ internal class CubeIDEProject : XmlConfigFile {
         IocLinkNameElement = IocLinkElement?.Element(NameKey);
         IocLinkLocationUriElement = IocLinkElement?.Element(LocationUriKey);
     }
+
+    private const string NameKey = "name";
+    private const string LinkedResourcesKey = "linkedResources";
+    private const string LinkKey = "link";
+    private const string LocationUriKey = "locationURI";
 
     private readonly XElement? NameElement;
     private readonly XElement? IocLinkElement;
