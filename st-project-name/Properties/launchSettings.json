@@ -20,6 +20,11 @@
     },
     "test-invalid-directory": {
       "commandName": "Project"
+    },
+    "help": {
+      "commandName": "Project",
+      "commandLineArgs": "-c \"Test message.\"",
+      "workingDirectory": "D:\\Source\\Embedded\\Templates\\STM32H745I-DISCO"
     }
   }
 }

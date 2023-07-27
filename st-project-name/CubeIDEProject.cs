@@ -40,8 +40,8 @@ internal class CubeIDEProject : XmlConfigFile {
     }
 
     public CubeIDEProject(string path) : base(path) {
-        NameElement = Root.Element(NameKey);
-        IocLinkElement = Root.Element(LinkedResourcesKey)?
+        NameElement = Root?.Element(NameKey);
+        IocLinkElement = Root?.Element(LinkedResourcesKey)?
             .Elements(LinkKey).FirstOrDefault(e => e.Element(LocationUriKey)?.Value?.EndsWith(".ioc") ?? false);
         IocLinkNameElement = IocLinkElement?.Element(NameKey);
         IocLinkLocationUriElement = IocLinkElement?.Element(LocationUriKey);
