@@ -25,6 +25,7 @@ internal static class CLI {
     public static int Main(string[] args) {
         ConsoleEx.Init();
         ConsoleEx.BulletIndentation = 2;
+        Console.Clear(); // Temporary fix for scolling vs curosor clash. The bug exists in Woof.Console v6.2.0 module.
         var commandLine = CommandLine.Default;
         commandLine.ParametersMin = 0;
         commandLine.ParametersMax = 2;
