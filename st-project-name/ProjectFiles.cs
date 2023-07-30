@@ -16,6 +16,11 @@ internal class ProjectFiles {
     public string CubeIDEMain { get; }
 
     /// <summary>
+    /// Gets the STM32CubeIDE launch configuration path.
+    /// </summary>
+    public string LaunchConfiguration { get; }
+
+    /// <summary>
     /// Gets the main TouchGFX project file path.
     /// </summary>
     public string TouchGFXMain { get; }
@@ -39,6 +44,9 @@ internal class ProjectFiles {
         string cubePath = Path.Combine(path, STM32CubeIDEDirectory);
         CubeIDEMain = Directory.Exists(cubePath)
             ? Directory.EnumerateFiles(cubePath, "*.project", SearchOption.TopDirectoryOnly).FirstOrDefault(string.Empty)
+            : string.Empty;
+        LaunchConfiguration = Directory.Exists(cubePath)
+            ? Directory.EnumerateFiles(cubePath, "*.launch", SearchOption.TopDirectoryOnly).FirstOrDefault(string.Empty)
             : string.Empty;
         TouchGFXMain = Directory.EnumerateFiles(path, "*.touchgfx", SearchOption.AllDirectories).FirstOrDefault(string.Empty);
         TouchGFXPart = Directory.EnumerateFiles(path, "*.touchgfx.part", SearchOption.AllDirectories).FirstOrDefault(string.Empty);

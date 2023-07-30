@@ -18,6 +18,11 @@ internal partial class ProjectConfiguration {
     public CubeIDEProject Project { get; }
 
     /// <summary>
+    /// Gets the launch configuration metadata.
+    /// </summary>
+    public LaunchConfiguration Launch { get; }
+
+    /// <summary>
     /// Gets the current project name.
     /// </summary>
     public string Name { get; private set; }
@@ -53,6 +58,11 @@ internal partial class ProjectConfiguration {
     public PathConfiguration CubeIocPath { get; }
 
     /// <summary>
+    /// Gets the path configuration of the build artifact path contained in the launch configuration.
+    /// </summary>
+    public PathConfiguration BuildArtifactPath { get; }
+
+    /// <summary>
     /// Gets the path configuration for the current .ioc file path for the TouchGFX project.
     /// </summary>
     public PathConfiguration TouchGFXIocPath { get; }
@@ -65,11 +75,13 @@ internal partial class ProjectConfiguration {
         Files = new ProjectFiles(path);
         Ioc = new IocFile(Files.IOCFile);
         Project = new CubeIDEProject(Files.CubeIDEMain);
+        Launch = new LaunchConfiguration(Files.LaunchConfiguration);
         Name = Project.Name;
         TouchGFX = new TouchGFXProject(Files.TouchGFXMain);
         TouchGFXPart = new TouchGFXProject(Files.TouchGFXPart);
         TouchGFXTargetConfig = new TouchGFXTargetConfig(Files.TouchGFXTargetConfig);
         CubeIocPath = new PathConfiguration(Project.LinkLocationUri, ".*PROJECT_LOC$");
+        BuildArtifactPath = new PathConfiguration(Launch.ProgramName, "Debug", "Release");
         TouchGFXIocPath = new PathConfiguration(TouchGFX.ProjectFile);
         CheckIssues();
     }
@@ -81,24 +93,42 @@ internal partial class ProjectConfiguration {
         var expectedIocPath = CubeIocPath.Copy().RenameTarget(Ioc.Name);
         var expectedIocPathString = expectedIocPath.ToString();
         if (Project.Exists) {
-            if (Project.Name != Ioc.Name) Issues.Add("Project name doesn't match .ioc file name.");
-            if (Project.LinkName != Ioc.FileName) Issues.Add("Project link name doesn't match .ioc file name.");
-            if (Project.LinkLocationUri != expectedIocPathString) Issues.Add("Project link locationURI doesn't match .ioc file name.");
+            if (Project.Name != Ioc.Name)
+                Issues.Add("Project name doesn't match .ioc file name.");
+            if (Project.LinkName != Ioc.FileName)
+                Issues.Add("Project link name doesn't match .ioc file name.");
+            if (Project.LinkLocationUri != expectedIocPathString)
+                Issues.Add("Project link locationURI doesn't match .ioc file name.");
+        }
+        if (Launch.Exists) {
+            var expectedBuildArtifactPath = BuildArtifactPath.Copy().RenameTarget(Ioc.Name);
+            var expectedBuildArtifactPathString = expectedBuildArtifactPath.ToString();
+            if (Launch.ProgramName != expectedBuildArtifactPathString)
+                Issues.Add("Launch configuration PROGRAM_NAME doesn't match .ioc file name.");
+            if (Launch.ProjectAttr != Ioc.Name)
+                Issues.Add("Launch configuration PROJECT_ATTR doesn't match .ioc file name.");
         }
         expectedIocPath = TouchGFXIocPath.Copy().RenameTarget(Ioc.Name);
         expectedIocPathString = expectedIocPath.ToString();
         if (TouchGFX.Exists) {
-            if (TouchGFX.FileName != Ioc.Name + ".touchgfx") Issues.Add("TouchGFX project file name doesn't match .ioc file name.");
-            if (TouchGFX.Name != Ioc.Name) Issues.Add("TouchGFX project Name doesn't match .ioc file name.");
-            if (TouchGFX.ProjectFile != expectedIocPathString) Issues.Add("TouchGFX project ProjectFile doesn't match .ioc file name.");
+            if (TouchGFX.FileName != Ioc.Name + ".touchgfx")
+                Issues.Add("TouchGFX project file name doesn't match .ioc file name.");
+            if (TouchGFX.Name != Ioc.Name)
+                Issues.Add("TouchGFX project Name doesn't match .ioc file name.");
+            if (TouchGFX.ProjectFile != expectedIocPathString)
+                Issues.Add("TouchGFX project ProjectFile doesn't match .ioc file name.");
         }
         if (TouchGFXPart.Exists) {
-            if (TouchGFXPart.FileName != Ioc.Name + ".touchgfx.part") Issues.Add("TouchGFX project .part file name doesn't match .ioc file name.");
-            if (TouchGFXPart.Name != Ioc.Name) Issues.Add("TouchGFX project .part Name doesn't match .ioc file name.");
-            if (TouchGFXPart.ProjectFile != expectedIocPathString) Issues.Add("TouchGFX project .part ProjectFile doesn't match .ioc file name.");
+            if (TouchGFXPart.FileName != Ioc.Name + ".touchgfx.part")
+                Issues.Add("TouchGFX project .part file name doesn't match .ioc file name.");
+            if (TouchGFXPart.Name != Ioc.Name)
+                Issues.Add("TouchGFX project .part Name doesn't match .ioc file name.");
+            if (TouchGFXPart.ProjectFile != expectedIocPathString)
+                Issues.Add("TouchGFX project .part ProjectFile doesn't match .ioc file name.");
         }
         if (TouchGFXTargetConfig.Exists) {
-            if (TouchGFXPart.ProjectFile != expectedIocPathString) Issues.Add("TouchGFX target.config project_file doesn't match .ioc file name.");
+            if (TouchGFXPart.ProjectFile != expectedIocPathString)
+                Issues.Add("TouchGFX target.config project_file doesn't match .ioc file name.");
         }
     }
 
@@ -128,6 +158,19 @@ internal partial class ProjectConfiguration {
                 Changes.Add("Project link locationURI");
             }
             Project.Update();
+        }
+        if (Launch.Exists) {
+            var newBuildArtifactPath = BuildArtifactPath.Copy().RenameTarget(newName);
+            var newBuildArtifactPathString = newBuildArtifactPath.ToString();
+            if (Launch.ProgramName != newBuildArtifactPathString) {
+                Launch.ProgramName = newBuildArtifactPathString;
+                Changes.Add("Launch configuration PROGRAM_NAME");
+            }
+            if (Launch.ProjectAttr != newName) {
+                Launch.ProjectAttr = newName;
+                Changes.Add("Launch configuration PROJECT_ATTR");
+            }
+            Launch.Update();
         }
         var newTouchGFXFileName = newName + ".touchgfx";
         newIocPath = TouchGFXIocPath.Copy().RenameTarget(newName);
