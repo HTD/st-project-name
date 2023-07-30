@@ -18,10 +18,11 @@
 *.elf
 *.ods#
 *.cache
+*.cyclo
 *.hex
 *.list
 *.map
-**/STM32CubeIDE/CM7/.settings/language.settings.xml
+**/.settings/language.settings.xml
 
 # Ki-Cad
 
