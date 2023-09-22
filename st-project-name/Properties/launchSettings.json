@@ -7,6 +7,11 @@
     "help": {
       "commandName": "Project",
       "commandLineArgs": "-?"
+    },
+    "Riverdi fix test": {
+      "commandName": "Project",
+      "commandLineArgs": "-c Riverdi_U599_Test",
+      "workingDirectory": "D:\\Source\\Embedded\\Riverdi\\Riverdi_U599_Test"
     }
   }
 }

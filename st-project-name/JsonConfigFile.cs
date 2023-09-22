@@ -73,7 +73,7 @@ internal class JsonConfigFile {
     /// <returns>JSON object.</returns>
     private static JObject Load(string path) {
         using StreamReader streamReader = File.OpenText(path);
-        using JsonTextReader jsonTextReader = new JsonTextReader(streamReader);
+        using JsonTextReader jsonTextReader = new(streamReader);
         return JObject.Load(jsonTextReader);
     }
 
@@ -84,7 +84,7 @@ internal class JsonConfigFile {
     /// <param name="path">Target file path.</param>
     private static void Save(JObject json, string path) {
         using StreamWriter streamWriter = File.CreateText(path);
-        using JsonTextWriter jsonTextWriter = new JsonTextWriter(streamWriter);
+        using JsonTextWriter jsonTextWriter = new(streamWriter);
         jsonTextWriter.Formatting = Formatting.Indented;
         json.WriteTo(jsonTextWriter);
     }

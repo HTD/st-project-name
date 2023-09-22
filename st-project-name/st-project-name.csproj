@@ -37,9 +37,9 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Woof.CommandLine" Version="6.2.0" />
-    <PackageReference Include="Woof.Console" Version="6.2.0" />
-    <PackageReference Include="Woof.Shell" Version="6.2.0" />
+    <PackageReference Include="Woof.CommandLine" Version="7.0.0" />
+    <PackageReference Include="Woof.Console" Version="7.0.0" />
+    <PackageReference Include="Woof.Shell" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
